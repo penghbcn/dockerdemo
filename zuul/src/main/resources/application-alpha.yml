@@ -1,0 +1,15 @@
+
+eureka:
+  instance:
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+    hostname: ${spring.cloud.client.ip-address}
+    prefer-ip-address: false
+    # 超过这个时间没收到心跳就剔除这个服务，这个配置一般为服务刷新时间配置的三倍，默认90s
+    lease-expiration-duration-in-seconds: 15
+    # 服务刷新时间，默认30s
+    lease-renewal-interval-in-seconds: 5
+  client:
+    service-url:
+      default-zone: http://eurekaservice:8761/eureka/
+logging:
+  config: classpath:log4j2.xml
