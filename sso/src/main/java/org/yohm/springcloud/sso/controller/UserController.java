@@ -34,7 +34,7 @@ public class UserController {
         return userService.login(user,response);
     }
 
-    @RequestMapping(value = "/logout", method = RequestMethod.POST)
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public JsonResponse logout(HttpServletResponse response) {
         return userService.logout(response);
     }

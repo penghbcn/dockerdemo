@@ -50,14 +50,22 @@ public interface UserMapper {
      * @param password
      * @return
      */
-    @Select("select " +
+    @Select("<script>" +
+            "select " +
             "username," +
             "password," +
             "age," +
             "phone," +
             "email " +
             "from demo_user_t " +
-            "where username=#{username} " +
-            "and password=#{password}")
+            "<where>" +
+            "<if test='username != null'>" +
+            "and username=#{username} " +
+            "</if>" +
+            "<if test='password != null'>" +
+            "and password=#{password} " +
+            "</if>" +
+            "</where>" +
+            "</script>")
     User selectOneByUserNameAndPassword(@Param("username") String username, @Param("password")String password);
 }

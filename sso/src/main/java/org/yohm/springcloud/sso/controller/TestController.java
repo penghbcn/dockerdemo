@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.yohm.springcloud.sso.util.JWTUtil;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
@@ -22,8 +23,8 @@ import java.util.Map;
 public class TestController {
 
     @RequestMapping("/")
-    public String call(){
-        return "Hi! This is SsoService.";
+    public String call(HttpServletRequest request){
+        return "Hi! "+request.getParameter("currentUser")+" This is SsoService.";
     }
 
     @RequestMapping("/upload")

@@ -1,4 +1,4 @@
-package org.yohm.springcloud.sso.util;
+package org.yohm.springcloud.zuul.util;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.yohm.springcloud.sso.model.User;
+import org.yohm.springcloud.zuul.model.User;
 import sun.misc.BASE64Encoder;
 
 import java.io.UnsupportedEncodingException;
@@ -66,8 +66,13 @@ public class JWTUtil {
         return true;
     }
 
-    public static String cookieToken2jwtToken(String cookieToken) throws UnsupportedEncodingException {
-        return URLDecoder.decode(cookieToken, "UTF-8").substring(7);
+    public static String cookieToken2jwtToken(String cookieToken)  {
+        try {
+            return URLDecoder.decode(cookieToken, "UTF-8").substring(7);
+        } catch (UnsupportedEncodingException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+        return "";
     }
 
     public static void verifyToken(String token) throws IllegalArgumentException, JWTVerificationException {
