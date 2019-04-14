@@ -13,9 +13,13 @@
 #      default-zone: http://eurekaservice:8761/eureka/
 
 spring:
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
   datasource:
     druid:
-      url: jdbc:mysql://192.168.1.7:3306/ssodb?useUnicode=true&characterEncoding=utf8&autoReconnect=true&allowMultiQueries=true&useSSL=false
+#      url: jdbc:mysql://192.168.1.7:3306/ssodb?useUnicode=true&characterEncoding=utf8&autoReconnect=true&allowMultiQueries=true&useSSL=false
+      url: jdbc:mysql://127.0.0.1:3306/ssodb?useUnicode=true&characterEncoding=utf8&autoReconnect=true&allowMultiQueries=true&useSSL=false
       username: root
       password: root
         #<!-- 配置监控统计拦截的filters -->

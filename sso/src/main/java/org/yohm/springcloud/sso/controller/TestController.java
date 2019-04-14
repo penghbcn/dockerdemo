@@ -1,9 +1,14 @@
 package org.yohm.springcloud.sso.controller;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.Claim;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.yohm.springcloud.sso.util.JWTUtil;
+
+import java.util.Map;
 
 /**
  * 功能简述

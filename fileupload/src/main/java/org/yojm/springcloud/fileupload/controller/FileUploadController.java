@@ -1,6 +1,7 @@
 package org.yojm.springcloud.fileupload.controller;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.extractor.ExcelExtractor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -50,7 +51,6 @@ public class FileUploadController {
                 rowNum++;
                 continue;
             }
-            TestModel student = new TestModel();
             Cell gradeCell = row.getCell(0);
             if (gradeCell != null) {
                 head[0] = (String) getCellValue(gradeCell);
@@ -65,6 +65,7 @@ public class FileUploadController {
             String subject = (String) getCellValue(row.getCell(2));
             int score = (int) getCellValue(row.getCell(3));
 
+            TestModel student = new TestModel();
             student.setGrade(head[0]);
             student.setName(head[1]);
             student.setSubject(subject);
@@ -79,9 +80,9 @@ public class FileUploadController {
         String fileName = file.getOriginalFilename();
         Workbook wb = null;
         try (InputStream fis = file.getInputStream()) {
-            if (fileName.endsWith("xls")) {
+            if (fileName.endsWith(".xls")) {
                 wb = new HSSFWorkbook(fis);
-            } else if (fileName.endsWith("xlsx")) {
+            } else if (fileName.endsWith(".xlsx")) {
                 wb = new XSSFWorkbook(fis);
             }
         } catch (Exception e) {
