@@ -30,21 +30,6 @@ public interface UserMapper {
     int insertOne(@Param("user")User user);
 
     /**
-     * 根据用户名查询用户信息
-     * @param username
-     * @return
-     */
-    @Select("select " +
-        "username," +
-        "password," +
-        "age," +
-        "phone," +
-        "email " +
-        "from demo_user_t " +
-        "where username=#{username}")
-    User selectOneByUserName(String username);
-
-    /**
      * 根据用户名和密码查询用户信息
      * @param username
      * @param password

@@ -23,8 +23,9 @@ import java.util.Map;
 public class TestController {
 
     @RequestMapping("/")
-    public String call(HttpServletRequest request){
-        return "Hi! "+request.getParameter("currentUser")+" This is SsoService.";
+    public String call(@RequestParam("currentUser")String username, HttpServletRequest request){
+        System.out.println("currentUser:"+username);
+        return "Hi! "+request.getParameter("currentUser")+", This is SsoService.";
     }
 
     @RequestMapping("/upload")

@@ -17,7 +17,7 @@ public class JsonResponse {
     public JsonResponse(){}
 
     public JsonResponse(Integer code) {
-        this(code,null,null);
+        this(code,null);
     }
 
     public JsonResponse(Integer code, String message) {

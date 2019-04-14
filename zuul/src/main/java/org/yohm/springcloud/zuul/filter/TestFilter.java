@@ -5,6 +5,7 @@ import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.http.HttpStatus;
 import org.yohm.springcloud.zuul.util.JWTUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,15 +51,21 @@ public class TestFilter extends ZuulFilter {
         String token = request.getHeader("Authorization");
         if(JWTUtil.isValidToken(token)){
             String username = JWT.decode(JWTUtil.cookieToken2jwtToken(token)).getClaim("username").asString();
+            System.err.println(username);
             request.getParameterMap();// 关键步骤，一定要get一下,下面这行代码才能取到值
             Map<String, List<String>> requestQueryParams = ctx.getRequestQueryParams();
             System.out.println("requestQueryParams: "+requestQueryParams);
             if(requestQueryParams == null){
-                requestQueryParams = new HashMap<>();
+                requestQueryParams = new HashMap<>(16);
             }
             requestQueryParams.put("currentUser",Collections.singletonList(username));
             ctx.setRequestQueryParams(requestQueryParams);
-            System.err.println(username);
+            ctx.setSendZuulResponse(true);
+        }else{
+            ctx.getResponse().setCharacterEncoding("UTF-8");
+            ctx.setResponseBody("校验失败");
+            ctx.setResponseStatusCode(HttpStatus.UNAUTHORIZED.value());
+            ctx.setSendZuulResponse(false);
         }
         return null;
     }

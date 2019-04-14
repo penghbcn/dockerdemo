@@ -15,9 +15,6 @@ import org.yohm.springcloud.sso.util.JWTUtil;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.Date;
 
 /**
  * 功能简述
