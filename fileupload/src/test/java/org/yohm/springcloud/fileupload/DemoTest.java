@@ -1,4 +1,4 @@
-package org.yojm.springcloud.fileupload;
+package org.yohm.springcloud.fileupload;
 
 import org.apache.logging.log4j.core.util.FileUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -7,7 +7,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.yojm.springcloud.fileupload.model.TestModel;
+import org.yohm.springcloud.fileupload.model.TestModel;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -59,10 +59,10 @@ public class DemoTest {
             String subject = (String) getCellValue(row.getCell(2));
             int score = (int) getCellValue(row.getCell(3));
 
-            student.setGrade(head[0]);
-            student.setName(head[1]);
-            student.setSubject(subject);
-            student.setScore(score);
+//            student.setGrade(head[0]);
+//            student.setName(head[1]);
+//            student.setSubject(subject);
+//            student.setScore(score);
 
             students.add(student);
         }

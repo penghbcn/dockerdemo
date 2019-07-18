@@ -1,43 +1,54 @@
-package org.yojm.springcloud.fileupload.controller;
+package org.yohm.springcloud.fileupload.service.impl;
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.extractor.ExcelExtractor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.yojm.springcloud.fileupload.model.TestModel;
+import org.yohm.springcloud.fileupload.constant.CommonConst;
+import org.yohm.springcloud.fileupload.util.ExcelUtils;
+import org.yohm.springcloud.fileupload.model.JsonResponse;
+import org.yohm.springcloud.fileupload.model.TestModel;
+import org.yohm.springcloud.fileupload.service.FinalExamImportService;
+import org.yohm.springcloud.fileupload.util.RedisService;
 
-import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
+import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * 功能简述
- * (文件上传)
+ * (解析期末考试excel)
  *
  * @author 海冰
- * @create 2019-04-06
+ * @date 2019-06-16
  * @since 1.0.0
  */
-@RestController
-@RequestMapping("/fileupload")
-public class FileUploadController {
+@Service
+public class FinalExamImportServiceImpl implements FinalExamImportService {
 
-    @RequestMapping(value = "/finalexam",method = RequestMethod.POST)
-    public String finalexam(@RequestParam("file")MultipartFile file){
-        List<TestModel> data = readExcel(file);
-        return data.toString();
+    @Autowired
+    private RedisService redis;
+    private static final String CANCEL_COMMAND = "cancel_right_now";
+
+    @Override
+    public JsonResponse finalExamExcelImport(MultipartFile file) {
+        Workbook wb = ExcelUtils.getWorkbook(file);
+        if (wb == null) {
+            return new JsonResponse(CommonConst.FAILURE, "解析失败,仅支持excel文件");
+        }
+        List<TestModel> data = analysisFinalExamSheet1(wb);
+        Deque<Object> dataDeque = new LinkedBlockingDeque<>(data);
+
+        System.out.println(data);
+        return new JsonResponse(CommonConst.SUCCESS,"解析成功",data);
     }
 
-    private static List<TestModel> readExcel(MultipartFile file) {
-        Workbook wb = getWorkBook(file);
+    private List<TestModel> analysisFinalExamSheet1(Workbook wb) {
         Sheet sheet = wb.getSheetAt(0);
         int rowNum = sheet.getPhysicalNumberOfRows();
         if (rowNum <= 1) {
@@ -66,29 +77,14 @@ public class FileUploadController {
             int score = (int) getCellValue(row.getCell(3));
 
             TestModel student = new TestModel();
-            student.setGrade(head[0]);
-            student.setName(head[1]);
-            student.setSubject(subject);
-            student.setScore(score);
+//            student.setGrade(head[0]);
+//            student.setName(head[1]);
+//            student.setSubject(subject);
+//            student.setScore(score);
 
             students.add(student);
         }
         return students;
-    }
-
-    private static Workbook getWorkBook(MultipartFile file) {
-        String fileName = file.getOriginalFilename();
-        Workbook wb = null;
-        try (InputStream fis = file.getInputStream()) {
-            if (fileName.endsWith(".xls")) {
-                wb = new HSSFWorkbook(fis);
-            } else if (fileName.endsWith(".xlsx")) {
-                wb = new XSSFWorkbook(fis);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return wb;
     }
 
     private static Object getCellValue(Cell cell) {
@@ -114,6 +110,24 @@ public class FileUploadController {
             default: {
                 return " ";
             }
+        }
+    }
+
+    @Async
+    public void readRedis(String key) {
+
+        try {
+            while(redis.lSize(key)>0){
+                String value = (String)redis.lRightPop(key);
+                if(CANCEL_COMMAND.equals(value)){
+                    throw new RuntimeException("已取消");
+                }
+                System.out.println(value);
+                Thread.sleep(1000);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            redis.delete(key);
         }
     }
 }

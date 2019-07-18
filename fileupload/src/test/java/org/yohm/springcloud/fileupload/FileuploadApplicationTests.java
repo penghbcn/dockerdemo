@@ -1,4 +1,4 @@
-package org.yojm.springcloud.fileupload;
+package org.yohm.springcloud.fileupload;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

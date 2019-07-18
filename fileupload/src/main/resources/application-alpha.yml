@@ -12,34 +12,50 @@
 #    service-url:
 #      default-zone: http://eurekaservice:8761/eureka/
 
-#spring:
-#  datasource:
-#    druid:
-#      url: jdbc:mysql://192.168.1.7:3306/ssodb?useUnicode=true&characterEncoding=utf8&autoReconnect=true&allowMultiQueries=true&useSSL=false
-#      username: root
-#      password: root
-#        #<!-- 配置监控统计拦截的filters -->
-#      filters: stat
-#        #<!-- 配置初始化大小、最小、最大 -->
-#      initial-size: 1
-#      min-idle: 1
-#      max-active: 20
-#        #<!-- 配置获取连接等待超时的时间 -->
-#      max-wait: 60000
-#        #<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
-#      time-between-eviction-runs-millis: 60000
-#        #<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
-#      min-evictable-idle-time-millis: 300000
-#      validation-query: 'select 1'
-#      test-while-idle: true
-#      test-on-borrow: false
-#      test-on-return: false
-#      connection-properties: 'druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000'
-#      stat-view-servlet:
-#        enabled: true
-#        login-username: admin
-#        login-password: admin
-#        url-pattern: /druid/*
-#        reset-enable: false
-#logging:
-#  config: classpath:log4j2.xml
+spring:
+  datasource:
+    druid:
+      url: jdbc:mysql://192.168.1.7:3306/file_upload_db?useUnicode=true&characterEncoding=utf8&autoReconnect=true&allowMultiQueries=true&useSSL=false
+      username: root
+      password: root
+        #<!-- 配置监控统计拦截的filters -->
+      filters: stat
+        #<!-- 配置初始化大小、最小、最大 -->
+      initial-size: 1
+      min-idle: 1
+      max-active: 20
+        #<!-- 配置获取连接等待超时的时间 -->
+      max-wait: 60000
+        #<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+      time-between-eviction-runs-millis: 60000
+        #<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+      min-evictable-idle-time-millis: 300000
+      validation-query: 'select 1'
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      connection-properties: 'druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000'
+      stat-view-servlet:
+        enabled: true
+        login-username: admin
+        login-password: admin
+        url-pattern: /druid/*
+        reset-enable: false
+
+  redis:
+    host: 192.168.1.7
+    port: 6379
+    password: 123456
+    lettuce:
+      shutdown-timeout: 100ms
+      pool:
+        maxActive: 50
+        maxIdle: 50
+        minIdle: 10
+        maxWait: 60000
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+logging:
+  config: classpath:log4j2.xml

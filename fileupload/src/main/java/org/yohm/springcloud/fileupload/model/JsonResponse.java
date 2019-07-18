@@ -1,4 +1,4 @@
-package org.yojm.springcloud.fileupload.model;
+package org.yohm.springcloud.fileupload.model;
 
 /**
  * 功能简述
